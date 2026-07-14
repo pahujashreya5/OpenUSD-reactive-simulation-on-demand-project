@@ -13,7 +13,7 @@
 
 # Master Scene script demo output
 
-https://github.com/user-attachments/assets/354e573c-fe75-44ec-b510-b29ba3c954da
+[Demo Video](https://github.com/user-attachments/assets/354e573c-fe75-44ec-b510-b29ba3c954da)
 
 # References:
 
