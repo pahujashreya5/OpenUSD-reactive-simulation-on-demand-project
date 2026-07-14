@@ -26,4 +26,9 @@ python3 OpenUSD/build_scripts/build_usd.py ~/USD_Install --generator Ninja
 
 2. Another issue I faced (and this might just be me) was with software updates. I had a full software update for my OS that was pending, only after I installed it did the xcode CLI install and get recognized properly. Note that after updates, you might have to reset or even reinstall some tools so going over the installation from scratch would save you time.
 
+3. Recent update: the build scripts install their python bindings into site-packages instead of lib/python like they used to. so you can set path dynamically.
+```
+export PYTHONPATH="$(find /Users/{your home folder}/USD_Install/lib -name 'pxr' -type d -prune -exec dirname {} \;):$PYTHONPATH"
+```
+
 
