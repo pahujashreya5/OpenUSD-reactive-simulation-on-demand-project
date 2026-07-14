@@ -1,7 +1,8 @@
 I use a Mac M2, and the installation of OpenUSD for MacOS involes cloning a Github repo. This can lead to lots of version and installation issues.
 
-1. xcode
-In case you keep getting the error that xcode is required even though your command line tools are isntalled, you don't need to install the full app. Run the below code in your terminal. This gives a fake response to the repo, which is trying to run a check for xcode app installation, even though the official readme says that CLI tools will work. After this, the build script command should work.
+1. I used Ninja for the build since Xcode was giving me issues.
+   
+2. In case you keep getting the error that xcode is required even though your command line tools are isntalled, you don't need to install the full app. Run the below code in your terminal. This gives a fake response to the repo, which is trying to run a check for xcode app installation, even though the official readme says that CLI tools will work. After this, the build script command should work.
 
 ```
 mkdir -p ~/.xcode_hack
