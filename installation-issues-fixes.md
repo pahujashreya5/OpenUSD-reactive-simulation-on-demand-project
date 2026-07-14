@@ -1,4 +1,4 @@
-I use a Mac M2, and the installation of OpenUSD for MacOS involes cloning a Github repo. This can lead to lots of version and installation issues.
+I use a Mac M2, and the installation of OpenUSD for MacOS involes cloning a Github repo. This can lead to lots of version and installation issues.  
 _Keep your laptop plugged in.  
 Also, your machine might heat up BTW._
 
