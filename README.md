@@ -1,6 +1,7 @@
 # Project Description: Openusd Reactive Simulation-On-Demand Ingestion
 
 ## Overview: Generates dust simulations without an artist ever touching the mouse.
+Things to understand before looking at the code: python, python for Houdini, openUSD basics, basic nets in Houdini, Solaris basics, os, some idea about hython
 
 ## Planned Data/Instruction Flow:
 
