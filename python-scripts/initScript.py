@@ -1,8 +1,12 @@
-from pxr import Usd, UsdGeom, Gf
+import os
+from pxr import Usd, UsdGeom, Gf, Vt
 import random
 
 def CreateStage(file_path):
     # Initializes the stage and sets base metadata
+    if os.path.exists(file_path):
+        os.remove(file_path)
+
     stage = Usd.Stage.CreateNew(file_path)
     
     # define default root prim
@@ -10,7 +14,7 @@ def CreateStage(file_path):
     stage.SetDefaultPrim(root_prim.GetPrim())
     
     # Sst stage metadata
-    # set up axis +z
+    # set up axis to +z
     UsdGeom.SetStageUpAxis(stage, UsdGeom.Tokens.z)
     # setting start and end time codes
     stage.SetStartTimeCode(1)
@@ -22,6 +26,9 @@ def CreateStage(file_path):
 def CreateGround(stage, prim_path):
     # creates a ground plane (will be used to detect sphere hits)
     ground=UsdGeom.Plane.Define(stage, prim_path)
+    # we need to author this manually in order to use bbox_cache later
+    ground.CreateExtentAttr([Gf.Vec3f(-1, -1, -1), Gf.Vec3f(1, 1, 1)])
+
     xform=UsdGeom.Xformable(ground)
     xform.ClearXformOpOrder()
     translate_op=xform.AddTranslateOp()
@@ -32,6 +39,8 @@ def CreateGround(stage, prim_path):
 def CreateSphere(stage, prim_path):
     # Creates a sphere prim on the provided stage
     sphere = UsdGeom.Sphere.Define(stage, prim_path)
+    # we need to author this manually in order to use bbox_cache later
+    sphere.CreateExtentAttr([Gf.Vec3f(-1, -1, -1), Gf.Vec3f(1, 1, 1)])
     sphere.GetPrim().SetMetadata('comment', 'created sphere geom')
     
     return sphere
@@ -44,7 +53,6 @@ def AnimateSphere(sphere_prim):
     xform.ClearXformOpOrder()
     # adding a transformation operation
     translate_op = xform.AddTranslateOp()
-    scale_op=xform.AddScaleOp()
     
     # interval set to 8 seconds
     start_frame=1
@@ -70,7 +78,8 @@ def main():
     stage = CreateStage(file_name)
 
     # 2. pass the memory object (stage usda) through created functions
-    ground=CreateGround(stage,'/Root/ground')
+    # we need to create the ground too
+    ground = CreateGround(stage, '/Root/ground')
     sphere = CreateSphere(stage, '/Root/sphere')
     AnimateSphere(sphere)
     
