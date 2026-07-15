@@ -1,6 +1,7 @@
 # i have used bounding box for collision detection because i intend to progressively add complexity to this project in terms of number of ground planes and more moving primitives other than the sphere
 
 from pxr import Usd, UsdGeom, Gf
+import subprocess
 
 def RetrieveScene():
     path='./stage1.usda'
@@ -81,10 +82,38 @@ def FindHit(stage, ground, sphere):
     print(f"no collision detected")
     return None, None 
 
-def CallSubProcessHython(ground_AABB, sphere_AABB):
-    # wake up houdini in background
-    print(f"placehloder: calling houdini subprocess")
-    return True # on correct execution
+def CallSubProcessHython(hit_frame, contact_point):
+    # we need to convert our data to strings so that it can pass through the os and reach hython. this conversion to strings is called SERIALIZATION.
+    
+    hit_frame_str=str(hit_frame)
+    x=f"{contact_point[0]:.3f}" # let's cut it off at 3 decimal places so that the string isn't too long and confusing for when we want to check it
+    y=f"{contact_point[1]:.3f}"
+    z=f"{contact_point[2]:.3f}"
+
+    # os executes this list of commands
+    cmd = [
+        "hython", # the subprocess we want to run. (an executable)
+        "houdiniWorker.py", # the script with our serialized data that we want to run in the subprocess
+        "--frame", hit_frame_str, # the -- is for when this will go into the command line. just the format that needs to be followed in CLI
+        "--x", x,
+        "--y", y,
+        "--z", z,
+    ]
+
+    # execute subprocess & make suer checks are in place. make sure to put return statements for all the cases to be safe from os freezing etc
+    try:
+        subprocess.run(cmd, check=True) # checks in case subprocess crashes. but our python won't crash because of process isolation :)
+        print("success")
+        return True
+    except subprocess.CalledProcessError as e: # in case the subprocess houdini fails/crashes
+        print(f"subprocess failed due to error {e}")
+        return False
+    except FileNotFoundError: # in case we cant find the exec
+        # you can replace the word "hython" with path to exec OR set in path to hython zshrc 
+        print("could not find hython.")
+        return False
+
+    return False # just a fallback
 
 
 if __name__=="__main__":
