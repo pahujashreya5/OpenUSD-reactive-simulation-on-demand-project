@@ -26,6 +26,7 @@
 - all demo vids to be added
 - diagram workflow to be added
 - add tests
+- dynamic coordinates in rand for sphere and ground
 
 
 
