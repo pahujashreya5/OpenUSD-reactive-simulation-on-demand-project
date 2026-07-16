@@ -16,6 +16,10 @@ Things to understand before looking at the code: python, python for Houdini, ope
 
 [Demo Video](https://github.com/user-attachments/assets/354e573c-fe75-44ec-b510-b29ba3c954da)
 
+# Notes
+
+1. using vex within to run with hython: i had to use vex to manually simulate the dust because popnet wouldn't load into my memory ue to system issues. using vex doesn't load and heavy dopnet with all its nodes and node types, and therefore the it executes super fast. of course, this is in fact taking a step backwards because solaris already has the option to create a popnet in just a few lines but i was not able to do this on my machine so i am leaving this note here for others. 
+
 # References:
 
 1. [https://openusd.org/dev/tut_xforms.html](https://openusd.org/dev/tut_xforms.html)
