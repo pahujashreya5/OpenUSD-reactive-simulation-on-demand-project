@@ -44,6 +44,9 @@ def CreateSphere(stage, prim_path):
     sphere = UsdGeom.Sphere.Define(stage, prim_path)
     # we need to author this manually in order to use bbox_cache later
     sphere.CreateExtentAttr([Gf.Vec3f(-1, -1, -1), Gf.Vec3f(1, 1, 1)])
+    xform=UsdGeom.Xformable(sphere)
+    scale_op=xform.AddScaleOp()
+    scale_op.Set(Gf.Vec3d(0.5,0.5,0.5))
     sphere.GetPrim().SetMetadata('comment', 'created sphere geom')
     
     return sphere
@@ -53,7 +56,7 @@ def AnimateSphere(sphere_prim):
     # transformation for sphere
     xform = UsdGeom.Xformable(sphere_prim)
     # clearing any previous transformations
-    xform.ClearXformOpOrder()
+    # xform.ClearXformOpOrder()
     # adding a transformation operation
     translate_op = xform.AddTranslateOp()
     
@@ -67,8 +70,8 @@ def AnimateSphere(sphere_prim):
         x=random.uniform(-1.0,1.0)
         y=random.uniform(-1.0,1.0)
         # to make sure we have hits
-        z=random.uniform(0.999,2.0)
-        time_code=Usd.TimeCode(frame*speed)
+        z=random.uniform(2.5,10.0)
+        time_code=Usd.TimeCode(frame)
         # author opinions at specific timecodes
         # Gf.Vec3d is used to pass precise 3D vector coordinates (x,y,z)
         translate_op.Set(Gf.Vec3d(x,y,z),time_code)
