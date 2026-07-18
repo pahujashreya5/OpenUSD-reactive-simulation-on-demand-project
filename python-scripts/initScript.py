@@ -1,4 +1,7 @@
 import os
+print("PYTHONPATH:", os.environ.get("PYTHONPATH"))
+print("PXR_PLUGINPATH_NAME:", os.environ.get("PXR_PLUGINPATH_NAME"))
+print("DYLD_LIBRARY_PATH:", os.environ.get("DYLD_LIBRARY_PATH"))
 from pxr import Usd, UsdGeom, Gf, Vt
 import random
 
