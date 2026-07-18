@@ -1,7 +1,7 @@
 # i have used bounding box for collision detection because i intend to progressively add complexity to this project in terms of number of ground planes and more moving primitives other than the sphere
 
-from pxr import Usd, UsdGeom, Gf
-import subprocess
+import os, subprocess
+from pxr import Usd, UsdGeom, Gf, Sdf
 
 def RetrieveScene():
     path='./stage1.usda'
@@ -100,9 +100,16 @@ def CallSubProcessHython(hit_frame, contact_point):
         "--z", z,
     ]
 
+    clean_env = os.environ.copy()
+    clean_env.pop("PYTHONPATH", None)
+    clean_env.pop("DYLD_LIBRARY_PATH", None)
+    clean_env.pop("PXR_PLUGINPATH_NAME", None)
+
     # execute subprocess & make suer checks are in place. make sure to put return statements for all the cases to be safe from os freezing etc
     try:
-        subprocess.run(cmd, check=True) # checks in case subprocess crashes. but our python won't crash because of process isolation :)
+        subprocess.run(cmd, env=clean_env, check=True) # checks in case subprocess crashes. but our python won't crash because of process isolation :)
+        # add the dust sim payload to our master stage
+        AddPayloadToStage('stage1.usda', 'dust_sim.usd', hit_frame)
         print("success")
         return True
     except subprocess.CalledProcessError as e: # in case the subprocess houdini fails/crashes
@@ -115,6 +122,20 @@ def CallSubProcessHython(hit_frame, contact_point):
 
     return False # just a fallback
 
+def AddPayloadToStage(master_scene, sim, frame):
+    Sdf.FileFormat.RegisterFileExtensionForTarget("usdnc", "usd")
+    # adding payload
+
+    stage=Usd.Stage.Open(master_scene)
+
+    sim_path=f"/Root/DustImpact_frame_{frame}"
+    sim_prim=stage.DefinePrim(sim_path, "Xform")
+
+    sim_prim.GetPayloads().AddPayload(sim)
+
+    # now save the final scene to disk
+    stage.GetRootLayer().Save()
+    print("successfully saved final scene with sim")
 
 if __name__=="__main__":
     stage, ground, sphere=RetrieveScene()
@@ -125,6 +146,11 @@ if __name__=="__main__":
         CallSubProcessHython(hit_frame, hit_coordinates)
     else:
         print(f"no collisions")
+
+    # after bake & export complete, we use PAYLOAD in openUSD to load the sim only at render time. we already have the world coordinates in our lightweight sim usd file so we jsut need to create a prim and point to the lcoation of the sim.
+
+
+    
 
 
 
