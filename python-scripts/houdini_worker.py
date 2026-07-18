@@ -2,7 +2,9 @@
 # argparse is the library used to parse strings (ie, understand string as data/commands)
 
 import sys, argparse, os
-from pxr import Usd
+from pxr import Usd, Sdf
+print(Sdf.FileFormat.FindById('usdnc'))
+print("usd version: ", Usd.GetVersion())
 
 try:
     import hou # the houdini library. hython has access to this because it is houdini's compiler. this will only work if this script is run using the hython compiler. python will throw error because it does not know this library.
@@ -76,27 +78,13 @@ def DustSimulationBuildAndExport(frame, x, y, z):
     # we need to change from object/geometry context to solaris context
     stage_context=hou.node('/stage') # switch from build to solaris
     # import the sim into our usd stage using a sop
-    # The USD stage gnerated by a LOP node network always consists of a root layer that is empty except for the small set of root prim metadata that USD requires to be on the root layer. Aside from this metadata, the root layer only contains a list of sublayers. These sublayers are, of course, added by LOP nodes.
-    # FROM THE DOCS - https://www.sidefx.com/docs/hdk/_h_d_k__op_basics__lop_stages.html#HDK_OpBasics_LopStages_StageStructure
-    # this is why we need to FLATTENSTAGE later when calling usd rop
-
-    camera = stage_context.createNode('camera', 'render_cam')
-
-    camera.parm('tx').set(x)
-    camera.parm('ty').set(y + 2.0)
-    camera.parm('tz').set(z + 5.0)
-
-    camera.parm('rx').set(-22)
-    camera.parm('ry').set(0)
-    camera.parm('rz').set(0)
-
-    camera.parm('focalLength').set(35)
 
     print("creating sop import")
     sop_import=stage_context.createNode('sopimport', 'sop_import_node')
     print("created sop import")
     sop_import.parm('soppath').set(popnet.path())
     print("set soppath to popnet.path()", popnet.path())
+    sop_import.parm('primpath').set('/dust_particles')
     usd_rop_node=stage_context.createNode('usd_rop', 'usd_rop_node')
 
     print("created usd rop node")
@@ -105,6 +93,7 @@ def DustSimulationBuildAndExport(frame, x, y, z):
 
     # name of output file
     out_filename="$HIP/dust_sim.usdnc"
+    # out_filename = hou.text.expandString("$HIP/dust_sim.usdnc")
     print("created output filename")
     # set the name. the node is called lopoutput in houdini
     # actuall .usdnc is the extension for non commercial (apprentice) houdini, which i use. it is identical to .usda, just that it won't work with other DCCs. (will be encrypted for them)
@@ -122,7 +111,8 @@ def DustSimulationBuildAndExport(frame, x, y, z):
     # usd_rop_node.parm('erroronsavenodepath').set(0)
 
     print("starting simulation baking")
-    usd_rop_node.parm('execute').pressButton() # finally, render!
+    # usd_rop_node.parm('execute').pressButton() # finally, render!
+    usd_rop_node.render()
     # print(out_filename.path())
     print("bake complete 🤯")
 
