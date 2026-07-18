@@ -76,6 +76,9 @@ def DustSimulationBuildAndExport(frame, x, y, z):
     # we need to change from object/geometry context to solaris context
     stage_context=hou.node('/stage') # switch from build to solaris
     # import the sim into our usd stage using a sop
+    # The USD stage gnerated by a LOP node network always consists of a root layer that is empty except for the small set of root prim metadata that USD requires to be on the root layer. Aside from this metadata, the root layer only contains a list of sublayers. These sublayers are, of course, added by LOP nodes.
+    # FROM THE DOCS - https://www.sidefx.com/docs/hdk/_h_d_k__op_basics__lop_stages.html#HDK_OpBasics_LopStages_StageStructure
+    # this is why we need to FLATTENSTAGE later when calling usd rop
 
     camera = stage_context.createNode('camera', 'render_cam')
 
