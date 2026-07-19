@@ -3,20 +3,13 @@
 ## Overview: Generates dust simulations without an artist ever touching the mouse.
 Things to understand before looking at the code: python, python for Houdini, openUSD basics, basic nets in Houdini, Solaris basics, os, some idea about hython
 
+# flowchart
+
 <img width="3281" height="1575" alt="usd_project_flowchart" src="https://github.com/user-attachments/assets/262ee533-37f8-4e9f-8071-0c17d388b63a" />
 
-## Planned Data/Instruction Flow:
+# demo output_v1
 
-1. USD Stage sits in memory.
-2. Python scanner reads Stage metadata. Walks through pipeline and computes AABBs (Axis-Aligned Bounding Boxes).
-3. When intersection is verified, the Python controller marshals the 3D data into strings.
-4. Isolated subprocess (using hython) is created.
-5. Houdini reads the data and evaluates the DOP network for it. Then writes localized USD data back to disk.
-6. Composition Arc is written using main controller to add the simulated geometry back into the scene.
-
-# Master Scene script demo output
-
-[Demo Video](https://github.com/user-attachments/assets/354e573c-fe75-44ec-b510-b29ba3c954da)
+https://github.com/user-attachments/assets/c2b7c652-cc27-4ae4-a080-6ce323c71931
 
 # Notes
 
@@ -27,12 +20,6 @@ another fix (other than manually vex scripting) is find and load the required li
 something like a simple dust sim can be written with vex, but there is no point going by this method if your net is going to be complex. that would defeat the purpose of using hython (headless Houdini) at all.
 2. using houdini apprentice so dust sim is exporting as .usdnc. not recognized so need to write a plugin using Sdf
 
--> usdviewer not working for now. using quicklook mac
-```usdpyhthon initScript.py```
-
-```env -i HOME="$HOME"USER="$USER"PATH="/usr/bin:/bin:/usr/sbin:/sbin:/Applications/Houdini/Houdini21.0.700/Frameworks/Houdini.framework/Versions/Current/Resources/bin" hython intersectionEngine.py```
-
-to run intersectionEngine.py
 
 # References:
 
@@ -43,9 +30,7 @@ to run intersectionEngine.py
 
 ### PENDING TASKS
 - naming conventions to be corrected
-- all demo vids to be added
-- diagram workflow to be added
-- add tests
+- detailed diagram workflow to be added
 - dynamic coordinates in rand for sphere and ground
 
 
