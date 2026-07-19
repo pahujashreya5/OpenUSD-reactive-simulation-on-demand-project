@@ -1,0 +1,24 @@
+{
+  "Plugins": [
+    {
+      "Info": {
+        "Types": {
+          "UsdncFileFormat": {
+            "bases": [ "SdfFileFormat" ],
+            "displayName": "USD Non-Commercial File Format",
+            "extensions": [ "usdnc" ],
+            "formatId": "usdnc",
+            "primary": true
+          }
+        }
+      },
+      "LibraryPath": "../usdncPlugin.so",
+      "Name": "usdncPlugin",
+      "ResourcePath": "resources",
+      "Root": "resources",
+      "Type": "library"
+    }
+  ]
+}
+
+
